@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "959101581740",
+    "project_id": "wails-ecommerce-app",
+    "storage_bucket": "wails-ecommerce-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:959101581740:android:4a5beb1335d11a469e2209",
+        "android_client_info": {
+          "package_name": "com.example.e_commerce_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBxiPLFgA-7PvmKjt8ZE8RboNS0kzFnF8o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
