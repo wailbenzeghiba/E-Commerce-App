@@ -15,29 +15,40 @@ class _ForgotpasswordState extends State<Forgotpassword> {
   String email = "";
   final _formKey = GlobalKey<FormState>();
   resetPassword() async {
+    if (email.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: const Text("Please enter a valid email address"),
+        behavior: SnackBarBehavior.floating,
+      ));
+      return;
+    }
+
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: const Text("Password reset email sent! Check your inbox."),
+          behavior: SnackBarBehavior.floating,
+        ));
+      }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Container(
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Container(
               padding: const EdgeInsets.all(10),
               height: 55,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
                 color: const Color.fromARGB(255, 44, 32, 32),
               ),
-              child: const Row(
+              child: Row(
                 children: [
-                  SizedBox(
-                    width: 50,
-                  ),
+                  const SizedBox(width: 50),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: 6,
-                      ),
+                    children: const [
+                      SizedBox(height: 6),
                       Text(
                         "No User Found For That Email!",
                         style: TextStyle(
@@ -51,11 +62,19 @@ class _ForgotpasswordState extends State<Forgotpassword> {
                     ],
                   ),
                 ],
-              )),
+              ),
+            ),
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            width: 350,
+          ));
+        }
+      } else {
+        // Catch any other errors
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: const Text("An error occurred. Please try again."),
           behavior: SnackBarBehavior.floating,
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          width: 350,
         ));
       }
     }
@@ -141,7 +160,10 @@ class _ForgotpasswordState extends State<Forgotpassword> {
                               setState(() {
                                 email = mailcontroller.text;
                               }),
-                              resetPassword(),
+                              if (mounted)
+                                {
+                                  resetPassword(),
+                                }
                             }
                         },
                         child: Container(
