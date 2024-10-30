@@ -28,7 +28,6 @@ class _LoginState extends State<Login> {
           .signInWithEmailAndPassword(email: email, password: password);
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => BotNavBar()));
-
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Container(
             padding: EdgeInsets.all(10),
@@ -67,9 +66,9 @@ class _LoginState extends State<Login> {
         elevation: 0,
         width: 350,
       ));
-      Future.delayed(Duration(milliseconds: 500));
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => BotNavBar()));
+
+      Future.delayed(Duration(seconds: 5)).then((value) => Navigator.push(
+          context, MaterialPageRoute(builder: (context) => BotNavBar())));
     } on FirebaseAuthException catch (e) {
       if (e.code == "user-not-found") {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
