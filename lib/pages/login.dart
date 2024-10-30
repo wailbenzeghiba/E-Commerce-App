@@ -23,13 +23,15 @@ class _LoginState extends State<Login> {
   TextEditingController userpasswordcontroller = new TextEditingController();
 
   userLogin() async {
+    if (!_formkey.currentState!.validate()) return;
+
     try {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => BotNavBar()));
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Container(
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Container(
             padding: EdgeInsets.all(10),
             height: 55,
             decoration: BoxDecoration(
@@ -38,15 +40,11 @@ class _LoginState extends State<Login> {
             ),
             child: Row(
               children: [
-                SizedBox(
-                  width: 50,
-                ),
+                SizedBox(width: 40),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(
-                      height: 6,
-                    ),
+                    SizedBox(height: 6),
                     Text(
                       "Logged in Successfully",
                       style: TextStyle(
@@ -60,89 +58,56 @@ class _LoginState extends State<Login> {
                   ],
                 ),
               ],
-            )),
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        width: 350,
-      ));
-
-      Future.delayed(Duration(seconds: 5)).then((value) => Navigator.push(
-          context, MaterialPageRoute(builder: (context) => BotNavBar())));
-    } on FirebaseAuthException catch (e) {
-      if (e.code == "user-not-found") {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Container(
-              padding: EdgeInsets.all(10),
-              height: 55,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: const Color.fromARGB(255, 238, 137, 137),
-              ),
-              child: Row(
-                children: [
-                  SizedBox(
-                    width: 98,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: 6,
-                      ),
-                      Text(
-                        "User Not Found!",
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                  ),
-                ],
-              )),
+            ),
+          ),
           behavior: SnackBarBehavior.floating,
           backgroundColor: Colors.transparent,
           elevation: 0,
           width: 350,
         ));
-      } else if (e.code == "wrong-password") {
+
+        // Only immediate navigation after showing the snackbar
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => BotNavBar()));
+      }
+    } on FirebaseAuthException catch (e) {
+      if (mounted) {
+        String errorMessage = e.code == "user-not-found"
+            ? "User Not Found!"
+            : e.code == "wrong-password"
+                ? "Wrong Password!"
+                : "An error occurred.";
+
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Container(
-              padding: EdgeInsets.all(10),
-              height: 55,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: const Color.fromARGB(255, 238, 137, 137),
-              ),
-              child: Row(
-                children: [
-                  SizedBox(
-                    width: 98,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: 6,
+            padding: EdgeInsets.all(10),
+            height: 55,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: const Color.fromARGB(255, 238, 137, 137),
+            ),
+            child: Row(
+              children: [
+                SizedBox(width: 90),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 6),
+                    Text(
+                      errorMessage,
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
                       ),
-                      Text(
-                        "Wrong Password!",
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                  ),
-                ],
-              )),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
           behavior: SnackBarBehavior.floating,
           backgroundColor: Colors.transparent,
           elevation: 0,

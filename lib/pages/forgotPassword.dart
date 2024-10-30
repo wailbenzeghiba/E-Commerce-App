@@ -16,8 +16,8 @@ class _ForgotpasswordState extends State<Forgotpassword> {
   final _formKey = GlobalKey<FormState>();
   resetPassword() async {
     if (email.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: const Text("Please enter a valid email address"),
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text("Please enter a valid email address"),
         behavior: SnackBarBehavior.floating,
       ));
       return;
@@ -26,8 +26,8 @@ class _ForgotpasswordState extends State<Forgotpassword> {
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: const Text("Password reset email sent! Check your inbox."),
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("Password reset email sent! Check your inbox."),
           behavior: SnackBarBehavior.floating,
         ));
       }
@@ -42,12 +42,12 @@ class _ForgotpasswordState extends State<Forgotpassword> {
                 borderRadius: BorderRadius.circular(20),
                 color: const Color.fromARGB(255, 44, 32, 32),
               ),
-              child: Row(
+              child: const Row(
                 children: [
-                  const SizedBox(width: 50),
+                  SizedBox(width: 50),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
+                    children: [
                       SizedBox(height: 6),
                       Text(
                         "No User Found For That Email!",
@@ -72,8 +72,9 @@ class _ForgotpasswordState extends State<Forgotpassword> {
         }
       } else {
         // Catch any other errors
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: const Text("An error occurred. Please try again."),
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("An error occurred. Please try again."),
           behavior: SnackBarBehavior.floating,
         ));
       }
@@ -166,6 +167,7 @@ class _ForgotpasswordState extends State<Forgotpassword> {
                                 }
                             }
                         },
+                        // ignore: avoid_unnecessary_containers
                         child: Container(
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
